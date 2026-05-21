@@ -1,10 +1,10 @@
 import streamlit as st
+import pandas as pd
 
 # 페이지 기본 설정
 st.set_page_config(
     page_title="자취요리",
     page_icon="🍳",
-    layout="wide"
 )
 
 # 제목
@@ -12,7 +12,7 @@ st.markdown(
     """
     <h1 style='text-align: center;'>🍳 자취요리</h1>
     <h4 style='text-align: center; color: gray;'>
-    자취생들을 초간단 요리 추천
+    자취생들을 위한 초간단 요리 추천
     </h4>
     """,
     unsafe_allow_html=True
@@ -22,47 +22,54 @@ st.write("")
 st.write("")
 
 # 검색창
-ingredient = st.text_input(
-    "",
-    placeholder="재료를 입력하세요 (예: 계란, 밥, 김치)"
-)
+df = pd.read_csv("recipes.csv")
 
-# 추천 버튼
-# 추천 버튼
-if st.button("추천받기"):
+col1, col2 = st.columns([5, 1])
 
-    st.success(f"'{ingredient}' 재료 기반 추천 결과입니다!")
+with col1:
+    ingredient = st.text_input(
+        "",
+        placeholder="재료를 입력하세요 (예: 계란, 밥, 김치)"
+    )
 
-    st.subheader("🍳 추천 레시피")
+with col2:
+    search = st.button("검색")
 
-    # 계란 입력 시
-    if "계란" in ingredient:
+# 검색 버튼 클릭 시
+# 검색 버튼 클릭 시
+if search:
 
-        st.write("### 🍚 간장계란밥")
-        st.write("- 재료: 계란, 밥, 간장")
-        st.write("- 조리 시간: 5분")
-        st.write("- 조리 방법")
-        st.write("1. 계란을 굽는다")
-        st.write("2. 밥 위에 올린다")
-        st.write("3. 간장을 넣는다")
+    st.subheader(f"🔍 '{ingredient}' 검색 결과")
 
-    # 김치 입력 시
-    elif "김치" in ingredient:
+    found = False
 
-        st.write("### 🌶 김치볶음밥")
-        st.write("- 재료: 김치, 밥")
-        st.write("- 조리 시간: 10분")
+    # CSV 데이터 반복
+    for i, row in df.iterrows():
 
-    # 만두 입력 시
-    elif "만두" in ingredient:
+        # 재료 포함 여부 검색
+        if ingredient in row["ingredients"]:
 
-        st.write("### 🥟 만두")
-        st.write("- 재료: 냉동만두")
-        st.write("- 조리 시간: 7분")
+            found = True
 
-    # 아무것도 없을 때
-    else:
-        st.warning("추천 가능한 레시피가 없습니다 😢")
+            st.markdown(f"""
+            <div class="recipe-card">
+
+            <h3>🍳 {row['name']}</h3>
+
+            <p>📌 재료: {row['ingredients']}</p>
+
+            <p>🍽 카테고리: {row['category']}</p>
+
+            <p>⏰ 조리시간: {row['cooking_time']}분</p>
+
+            <p>👨‍🍳 조리법: {row['method']}</p>
+
+            </div>
+            """, unsafe_allow_html=True)
+
+    # 검색 결과 없을 때
+    if not found:
+        st.warning("검색 결과가 없습니다 😢")
 
 st.write("")
 st.write("")
