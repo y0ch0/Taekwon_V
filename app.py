@@ -36,69 +36,73 @@ with col2:
     search = st.button("검색")
 
 # 검색 버튼 클릭 시
-# 검색 버튼 클릭 시
 if search:
 
-    st.subheader(f"🔍 '{ingredient}' 검색 결과")
+    st.write("")
 
     found = False
 
-    # CSV 데이터 반복
+    # CSV 반복
     for i, row in df.iterrows():
 
-        # 재료 포함 여부 검색
+        # 재료 검색
         if ingredient in row["ingredients"]:
 
             found = True
 
-            st.markdown(f"""
-            <div class="recipe-card">
+            st.markdown("---")
 
-            <h3>🍳 {row['name']}</h3>
+            # 카드 내부 가로 배치
+            img_col, text_col = st.columns([1,3])
 
-            <p>📌 재료: {row['ingredients']}</p>
+            # 왼쪽 이미지
+            with img_col:
 
-            <p>🍽 카테고리: {row['category']}</p>
+                st.image(
+                    f"images/{row['image']}",
+                    width=180
+                )
 
-            <p>⏰ 조리시간: {row['cooking_time']}분</p>
+            # 오른쪽 텍스트
+            with text_col:
 
-            <p>👨‍🍳 조리법: {row['method']}</p>
+                st.subheader(row["name"])
 
-            </div>
-            """, unsafe_allow_html=True)
+                st.write(f"재료 : {row['ingredients']}")
 
-    # 검색 결과 없을 때
+    # 결과 없을 때
     if not found:
-        st.warning("검색 결과가 없습니다 😢")
+
+        st.warning("검색 결과가 없습니다 ")
 
 st.write("")
 st.write("")
 
 # BEST 레시피
-st.subheader("🔥 BEST 레시피 TOP 3")
+st.subheader(" 추천 레시피 TOP 3")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.image("간계밥.jpg", use_container_width=True)
-    st.write("🍚 간장계란밥")
-    st.write("⏰ 5분 완성")
+    st.image("images/egg_rice.jpg", use_container_width=True)
+    st.write("간장계란밥")
+    st.write("5분 완성")
 
 with col2:
-    st.image("김볶밥.jpg", use_container_width=True)
-    st.write("🌶 김치볶음밥")
-    st.write("⏰ 10분 완성")
+    st.image("images/kim.jpg", use_container_width=True)
+    st.write("김치볶음밥")
+    st.write("10분 완성")
 
 with col3:
-    st.image("만두밥.jpg", use_container_width=True)
-    st.write("🥟 만두")
-    st.write("⏰ 7분 완성")
+    st.image("images/mado.jpg", use_container_width=True)
+    st.write("만두")
+    st.write("7분 완성")
 
 st.write("")
 st.write("")
 
 # 빠른 추천
-st.subheader("⚡ 빠른 추천")
+st.subheader(" 빠른 추천")
 
 col4, col5, col6 = st.columns(3)
 
